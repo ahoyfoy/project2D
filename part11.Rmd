@@ -1,0 +1,104 @@
+---
+title: "Untitled"
+author: "Charlie Berry"
+date: "27/02/2019"
+output: html_document
+---
+
+```{r}
+
+#Charlie Berry
+#Wednesday 27 February 2019
+#MTH2006 Group Project Term 2
+
+set.seed(round(333), kind = "Mersenne-Twister", normal.kind = "Inversion")
+
+#Loading packages
+library(tidyverse)
+require(gridExtra)
+require(Amelia)
+
+#Part 1 - Analysing an experiment
+
+Teachingexample <- read.csv("~/Desktop/Teachingexample.csv")
+
+any(is.na(Teachingexample))
+#No missing values
+
+#Determining what in the dataset is already a factor
+class(Teachingexample$Group)
+#Numeric - integer
+
+Teachingexample$Group <- as.factor(Teachingexample$Group)
+is.factor(Teachingexample$Group)
+#Group is now a factor
+
+class(Teachingexample$TeachMethod)
+#True
+
+class(Teachingexample$Score)
+#Numeric - integer
+
+
+#Data exploration
+ggplot(data = Teachingexample, aes(TeachMethod, Score))  + 
+  geom_boxplot () + geom_jitter(aes( col = Group))
+#This shows that at first glance, it appears those with teach method B 
+#had higher overall scores (Public praise)
+
+
+
+#Ignoring blocking
+scoreteach <- lm(Score ~ TeachMethod,data =Teachingexample)
+anova(scoreteach)
+#Pr(>F) for TeachMethod is 0.0235 significant at the 5% level
+
+
+summary(scoreteach)
+#Pr(>F) for B is 0.0119, C is 0.3734, D is 0.4676, E is 0.5967.
+#Only TeachMethod B is statistically significant at the 5% level
+#Explains around 24% of the variation in the data
+
+
+#Including blocks
+teachgroup <- lm(Score ~ TeachMethod + Group, data = Teachingexample)
+anova(teachgroup)
+#Pr(>F) for TeachMethod is 0.00843 significant at the 5% level, 
+#for Group is 0.03228 also significant at 5%
+
+summary(teachgroup)
+#Pr(>F) for B is 0.00521, C is 0.31313, D is 0.40988, E is 0.54793.
+#Still, only TeachMethod B is statistically significant at the 5% level
+#Pr(>F) for Groups: 2 is 0.06185, 3 is 0.01409 (sig at 5%), 4 is 0.64982,
+#5 is 0.87954, 6 is 0.34052, 7 is 0.64982, 8 is 0.51270, 9 is 0.95970
+#Explains around 53% of the variation in the data
+
+
+model.matrix(teachgroup)
+
+#confidence intervals for all of the parameters in the model
+round(confint(teachgroup),2)
+
+#Sum to zero contrasts
+newcontrasts <- contr.sum(5)
+contr.sum(5)
+rownames(newcontrasts) <- c("A", "B", "C", "D", "E")
+colnames(newcontrasts) <- c("A", "B", "C", "D")
+  
+contrasts(Teachingexample$TeachMethod) <- newcontrasts
+contrasts(Teachingexample$TeachMethod)
+
+summary(lm(Score ~ TeachMethod + Group ,data = Teachingexample))
+#This shows that method B is  statistically significantly higher from the global average at the 5% level
+#However, method D is now also statistically lower at 5% from the global average
+#As is Group 3 statistically higher, now with global average
+#The Global Average is 63
+
+#Interaction?
+#summary(lm(Score ~ TeachMethod + Group + TeachMethod:Group, 
+#data = Teachingexample))
+#Just gives a bunch of NAs
+
+
+```
+

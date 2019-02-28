@@ -1,0 +1,116 @@
+---
+documentclass: article
+geometry: margin=1in
+fontsize: 11pt
+indent: true - \usepackage{indentfirst}
+output: pdf_document
+---
+\begin{titlepage}
+	\begin{center}
+    	\vspace*{1cm}
+    	
+    	\text{\huge MTH2006 Summative Assessment: Coursework 1}
+    	
+    	\vspace{1cm}
+    	
+	\text{\huge Group 2D}
+          \vspace{1cm}
+	
+        \text{\large JS, CB (002628), TC,}
+        \text{\large IS and LS}
+        
+    	\vspace{0.7cm}
+    	
+    	\date{}
+    	\vfill
+          	
+	\end{center}
+\end{titlepage}
+
+
+
+\section{Part 1: Analysing an Experiment}\label{partone}
+\subsection{Introduction} 
+
+In this report, we will be commenting on the effectiveness of various teaching methods. We were provided with a dataset which contained data from 45 students from 9 classes, with 5 students in each class being randomly assigned a teaching method. They then all sat an identical test, and their score was recorded. 
+
+
+Using this information, we created a two-way layout model, in which the classes were treated as blocks in order to mitigate the impact of covariates. For example, there might be difference in teachers in each class, or the classes may be taken at different times of the day that may potentially have an effect on the results. 
+
+$y_{i j}=\mu+\tau_{i}+\beta_{j}+\epsilon_{i j} \quad i=1, \ldots, 5 \quad j=1, \ldots, 9$
+where $\epsilon_{i j k}$ are a random sample of $N\left(0, \sigma^{2}\right)$ variables representing the error, $\tau_{i}$ the treatment effect associated with the $i^{t h}$ treatment, $\beta_{j}$ the $j^{t h}$ block effect . 
+
+
+
+To begin our analysis, we first began exploring our dataset. Initially, we checked to determine whether there were any missing values in the data. Once we had concluded that there werent any present, we then set to determine what data types we were dealing with. Score was `numeric`, while the teaching method (TeachMethod) was a `factor`. Group was also `numeric`, however, we felt that this didn't accurately represent the categorical nature of this variable. Therefore, we changed this to a `factor`. 
+
+Familiarising ourself with the data, we created several graphs which showed that on the surface, it appears that those who were taught with method B (recieved public praise) had on average a higher score in the test. 
+
+For anova of non blocked
+Pr(>F) for TeachMethod is 0.0235 significant at the 5% level
+
+For lm of non blocked
+Pr(>F) for B is 0.0119, C is 0.3734, D is 0.4676, E is 0.5967.
+Only TeachMethod B is statistically significant at the 5% level
+Explains around 24% of the variation in the data
+
+The multiple regression model: $Y_{i} \sim N\left(\beta_{0}+\beta_{2} x_{i 2}+\beta_{3} x_{i 3}+\beta_{4} x_{i 4}+\beta_{5} x_{i 5}+\alpha_{B} z_{i B}+\alpha_{C} z_{i C}+\alpha_{D} z_{i D}+ \alpha_{E} z_{i E} + \alpha_{F} z_{i F} + \alpha_{G} z_{i G}+ \alpha_{H} z_{i H}+ \alpha_{I} z_{i I}, \sigma^{2}\right)$
+
+%This is copy pasted and needs to be worked on 
+The null hypothesis of the $F$ -test on $F_{2}$ is $H_{0 \alpha} : \alpha_{j}=0$ for all $j=2, \ldots, k_{2},$ i.e., all levels
+have the same expected response. The alternative hypothesis is $H_{1 \alpha} :$ at least one $\alpha_{j} \neq 0 \backslash$
+i.e., at least one level has a different expected response. Under $H_{0 \alpha}, F_{2}$ has a $F_{k_{2}-1, n-k_{1}-k_{2}+1} $
+
+
+For anova of blocked
+Pr(>F) for TeachMethod is 0.00843 significant at the 5% level. This is smaller than that for non blocked
+for Group is 0.03228 also significant at 5%
+
+For lm of blocked
+Pr(>F) for B is 0.00521, C is 0.31313, D is 0.40988, E is 0.54793.
+Still, only TeachMethod B is statistically significant at the 5% level.
+Pr(>F) for Groups: 2 is 0.06185, 3 is 0.01409 (sig at 5%), 4 is 0.64982,
+5 is 0.87954, 6 is 0.34052, 7 is 0.64982, 8 is 0.51270, 9 is 0.95970
+Explains around 53% of the variation in the data.
+
+
+\newpage
+\section{Part 2: Simulation to Estimate the Increase in Power Due to Blocking}\label{parttwo}
+\subsection{Introduction}
+
+\newpage
+\section{Part 3: Estimating Sample Size}\label{partthree}
+\subsection{Introduction}
+
+\newpage
+
+\section{Figure for Part 1}
+```{r message = FALSE, echo = FALSE}
+set.seed(round(333), kind = "Mersenne-Twister", normal.kind = "Inversion")
+library(tidyverse)
+require(gridExtra)
+Teachingexample <- read.csv("~/Desktop/Teachingexample.csv")
+Teachingexample$Group <- as.factor(Teachingexample$Group)
+ggplot(data = Teachingexample, aes(TeachMethod, Score))  + geom_boxplot () + geom_jitter(aes( col = Group)) +ggtitle("Graph Depicing Test Score and Teaching Method") + labs(x = "Teaching Method", y = "Test Score")
+```
+
+\section{Figure for Part 2}
+
+\section{Figure for Part 3}
+\newpage
+\section{Appendix for Part 1: Analysing an Experiment}
+```{r code=readLines(knitr::purl('~/Library/Mobile Documents/com~apple~CloudDocs/Exeter/Second Year/Statistical Modelling and Inference/groupprojectterm2/part11.Rmd', documentation = 0)), eval = FALSE}
+
+```
+
+\section{Appendix for Part 2: Simulation to Estimate the Increase in Power Due to Blocking}
+```{r}
+
+```
+
+
+\section{Appendix for Part 3:  Estimating Sample Size}
+```{r}
+
+```
+
